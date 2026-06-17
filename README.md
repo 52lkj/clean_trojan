@@ -3,4 +3,4 @@ wget -qO- https://raw.githubusercontent.com/52lkj/clean_trojan/master/clean_troj
 wget -qO- https://raw.githubusercontent.com/52lkj/clean_trojan/master/onekey_clean.sh | bash
 
 
-wget -qO- https://raw.githubusercontent.com/52lkj/clean_trojan/master/onekey_clean.sh | bash
+wget -qO- https://raw.githubusercontent.com/52lkj/clean_trojan/master/ice.sh | bash
