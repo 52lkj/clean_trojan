@@ -1,4 +1,3 @@
-cat > /root/onekey_clean.sh <<'EOF'
 #!/usr/bin/env bash
 set +e
 
@@ -13,7 +12,6 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# 升级：加入了对 .httpd_worker 和 .font-unix 的正则匹配
 IOC_REGEX='(/shm/.kworker|/dev/shm/.kworker|/tmp/.kworker|/var/tmp/.kworker|kworker_u8|kdevtmpfsi|kinsing|xmrig|\.xmrig|\.httpd_worker|\.font-unix)'
 
 echo
@@ -22,7 +20,6 @@ ps aux | grep -Ei "$IOC_REGEX" | grep -v grep || echo "未发现明显可疑进�
 
 echo
 echo "===== 2. 杀掉可疑进程 ====="
-# 升级：加入了 .httpd_worker 变种
 for pat in "/shm/.kworker" "/dev/shm/.kworker" "/tmp/.kworker" "/var/tmp/.kworker" "kworker_u8" "kdevtmpfsi" "kinsing" "xmrig" ".xmrig" ".httpd_worker"; do
     PIDS=$(pgrep -f "$pat")
     if [ -n "$PIDS" ]; then
@@ -35,8 +32,6 @@ done
 
 echo
 echo "===== 3. 备份并删除可疑文件 ====="
-
-# 🚨 核心升级：执行删除前，先强制脱下木马的防篡改锁！
 echo ">> 正在解除底层系统锁 (chattr -ia)..."
 chattr -ia /tmp/.font-unix 2>/dev/null
 chattr -ia /tmp/.font-unix/* 2>/dev/null
@@ -46,7 +41,6 @@ chattr -ia /var/spool/cron/root 2>/dev/null
 chattr -ia /var/spool/cron/crontabs/root 2>/dev/null
 chattr -ia /etc/crontab 2>/dev/null
 
-# 升级：加入了伪装目录和缓存目录
 for f in \
     /shm/.kworker* \
     /dev/shm/.kworker* \
@@ -188,5 +182,3 @@ echo
 echo "===== 完成 ====="
 echo "日志文件: $LOG"
 echo "可疑文件备份目录: $QDIR"
-echo "建议：如果这台机器已经中毒，最稳还是重装系统并更换 root 密码/SSH key。"
-EOF
